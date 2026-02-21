@@ -1,0 +1,18 @@
+{
+  "slack_user_id": "UXXXXXXXXX",
+  "channels": {
+    "private": [
+      { "name": "your-private-channel-1", "id": "GXXXXXXXX" },
+      { "name": "your-private-channel-2", "id": "GXXXXXXXX" }
+    ],
+    "public": [
+      { "name": "general",               "id": "CXXXXXXXX" },
+      { "name": "engineering",           "id": "CXXXXXXXX" }
+    ]
+  },
+  "dms": [
+    { "name": "Colleague Name",          "id": "DXXXXXXXX" },
+    { "name": "Your Name (self)",        "id": "DXXXXXXXX" },
+    { "name": "Group DM (A, B, C...)",   "id": "CXXXXXXXX" }
+  ]
+}
