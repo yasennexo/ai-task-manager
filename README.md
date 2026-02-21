@@ -28,8 +28,6 @@ Claude reads your Slack messages, figures out what you need to do, and manages t
 git clone <repo-url>
 cd ai-task-manager
 npm install
-cp .env.example .env
-# Add your Anthropic API key to .env
 ```
 
 Then open Claude Code in this directory:

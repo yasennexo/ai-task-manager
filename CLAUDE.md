@@ -25,7 +25,7 @@ Task IDs are displayed as the first 8 characters in `npm run tasks` output. Use 
   "context": "Why this matters / background",
   "source": "slack",
   "source_ref": "channel-id-or-message-id",
-  "project": "nexo | mindhub | personal",
+  "project": "nexo | personal",
   "priority": "high | medium | low"
 }
 ```
@@ -57,7 +57,7 @@ Task IDs are displayed as the first 8 characters in `npm run tasks` output. Use 
    - Note: DM channel IDs (`D...`) differ from user IDs — ask the user to open the DM in Slack, copy the URL, and extract the channel ID from it (e.g. `https://app.slack.com/client/TXXXXXXX/DXXXXXXXX` → `DXXXXXXXX`). Group DMs work the same way.
 
 6. **Define projects**
-   - Ask: "What are your main work projects? (e.g. `nexo`, `mindhub`). Everything else will go under `personal`."
+   - Ask: "What are your main work projects? (e.g. `nexo`, `trading`). Everything else will go under `personal`."
    - Update the **Project definitions** section of this file (CLAUDE.md) with their project names and descriptions.
 
 7. **Write `slack.json`**
@@ -102,7 +102,7 @@ Supported scope parameters — use these to control what gets scanned:
    - **Missed items**: things shared with you (docs, prototypes, reviews) that you haven't acknowledged or acted on
    - Still skip pure FYIs, general discussion, and status updates with no action component for you
 4. For each extracted task:
-   - Assign **project**: `nexo` (work on Nexo), `mindhub` (work on MindHub), `personal` (everything else)
+   - Assign **project**: `nexo` (work on Nexo), `personal` (everything else)
    - Assign **priority**: `high` (urgent/blocking), `medium` (normal), `low` (nice-to-have)
    - Check `npm run tasks` first — skip if a task with the same title already exists (case-insensitive)
    - Run `npm run cli insert '<json>'` to save it
@@ -132,13 +132,10 @@ Always confirm after updating.
   [HIGH] Fix API auth endpoint
   [MED]  Review Bob's PR
 
-🟣 *MINDHUB*
-  [HIGH] Deploy new feature to staging
-
 🟢 *PERSONAL*
   [LOW]  Book dentist appointment
 
-Open tasks: Nexo 2 · MindHub 1 · Personal 1
+Open tasks: Nexo 2 · Personal 1
 ```
 
 3. Use the `slack_send_message` MCP tool to post this to your Slack DM channel
@@ -153,7 +150,6 @@ Execute in order:
 ## Project definitions
 
 - **nexo** — anything related to the Nexo product/codebase/team
-- **mindhub** — anything related to the MindHub product/codebase/team
 - **personal** — personal tasks, life admin, anything not tied to a work project
 
 ## Rules
