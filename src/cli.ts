@@ -76,21 +76,24 @@ switch (command) {
 
   case 'done': {
     if (!args[0]) { console.error('Usage: cli done <task-id>'); process.exit(1); }
-    updateStatus(args[0], 'done');
+    const doneCount = updateStatus(args[0], 'done');
+    if (doneCount === 0) { console.error(`✗ No task found with ID starting with: ${args[0]}`); process.exit(1); }
     console.log(`✓ Task ${args[0]} marked as done`);
     break;
   }
 
   case 'snooze': {
     if (!args[0] || !args[1]) { console.error('Usage: cli snooze <task-id> <YYYY-MM-DD>'); process.exit(1); }
-    updateStatus(args[0], 'snoozed', args[1]);
+    const snoozeCount = updateStatus(args[0], 'snoozed', args[1]);
+    if (snoozeCount === 0) { console.error(`✗ No task found with ID starting with: ${args[0]}`); process.exit(1); }
     console.log(`✓ Task ${args[0]} snoozed until ${args[1]}`);
     break;
   }
 
   case 'reopen': {
     if (!args[0]) { console.error('Usage: cli reopen <task-id>'); process.exit(1); }
-    updateStatus(args[0], 'open');
+    const reopenCount = updateStatus(args[0], 'open');
+    if (reopenCount === 0) { console.error(`✗ No task found with ID starting with: ${args[0]}`); process.exit(1); }
     console.log(`✓ Task ${args[0]} reopened`);
     break;
   }

@@ -110,7 +110,7 @@ Supported scope parameters — use these to control what gets scanned:
 
 ### Show tasks ("show my tasks", "what do I need to do?", "task list")
 
-Run `npm run tasks` and present the output clearly.
+Run `npm run tasks` and output the full list exactly as returned — every task with its ID, priority, title, and context. Never summarize, condense, or show only an overview. The user always wants the complete list.
 
 ### Update a task
 

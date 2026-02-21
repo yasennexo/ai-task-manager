@@ -31,10 +31,11 @@ export function insertTask(task: InsertTaskInput): void {
   );
 }
 
-export function updateStatus(id: string, status: 'open' | 'done' | 'snoozed', snoozeUntil?: string): void {
-  db.prepare(`
-    UPDATE tasks SET status = ?, snooze_until = ?, updated_at = datetime('now') WHERE id = ?
-  `).run(status, snoozeUntil ?? null, id);
+export function updateStatus(id: string, status: 'open' | 'done' | 'snoozed', snoozeUntil?: string): number {
+  const result = db.prepare(`
+    UPDATE tasks SET status = ?, snooze_until = ?, updated_at = datetime('now') WHERE id LIKE ?
+  `).run(status, snoozeUntil ?? null, `${id}%`);
+  return result.changes;
 }
 
 export function reopenSnoozedDueTasks(): number {
