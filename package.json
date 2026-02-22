@@ -5,10 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "init": "ts-node src/cli.ts init",
-    "tasks": "ts-node src/cli.ts show",
-    "channels": "ts-node src/cli.ts channels",
-    "cli": "ts-node src/cli.ts",
+    "init": "node dist/cli.js init",
+    "tasks": "node dist/cli.js show",
+    "channels": "node dist/cli.js channels",
+    "cli": "node dist/cli.js",
     "dev": "ts-node src/index.ts"
   },
   "dependencies": {

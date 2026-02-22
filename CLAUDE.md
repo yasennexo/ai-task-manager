@@ -4,7 +4,7 @@ You are a personal task management assistant. You extract actionable tasks from 
 
 ## Database CLI
 
-All task operations go through the CLI. Always run `npm run init` first if the DB might not exist.
+All task operations go through the compiled CLI. The TypeScript is pre-compiled to `dist/` — run `npm run build` if you ever modify source files. Always run `npm run init` first if the DB might not exist.
 
 | Command | What it does |
 |---|---|
