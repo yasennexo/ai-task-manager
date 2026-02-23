@@ -17,6 +17,7 @@ All task operations go through the compiled CLI. The TypeScript is pre-compiled 
 |---|---|
 | `npm run init` | Initialise the database |
 | `npm run tasks` | Show all open tasks grouped by project |
+| `npm run cli show done` | Show all completed tasks, most recent first |
 | `npm run cli insert '<json>'` | Insert a new task |
 | `npm run cli done <id>` | Mark a task as done |
 | `npm run cli snooze <id> <YYYY-MM-DD>` | Snooze a task |
@@ -150,6 +151,10 @@ Supported scope parameters — use these to control what gets scanned:
    - The user may approve all, reject individual items, or request edits — apply their feedback before proceeding
 7. Once approved, run `npm run cli insert '<json>'` for each confirmed task
 8. Report how many new tasks were added and from which sources
+
+### Show done tasks ("show my done tasks", "what have I completed?", "done list")
+
+Run `npm run cli show done` and output the full list exactly as returned — every completed task with its ID, title, and context, most recent first.
 
 ### Show tasks ("show my tasks", "what do I need to do?", "task list")
 

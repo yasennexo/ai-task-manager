@@ -78,6 +78,13 @@ export function getTasksByStatus(status: 'open' | 'done' | 'snoozed'): TaskSumma
   `).all(status) as TaskSummary[];
 }
 
+export function getDoneTasks(): Task[] {
+  return db.prepare(`
+    SELECT * FROM tasks WHERE status = 'done'
+    ORDER BY updated_at DESC
+  `).all() as Task[];
+}
+
 export type ExactDupe = { open_id: string; done_id: string; title: string };
 
 export function getExactDupes(): ExactDupe[] {

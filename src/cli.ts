@@ -4,7 +4,7 @@ dotenv.config();
 import fs from 'fs';
 import path from 'path';
 import { runMigrations } from './db/schema';
-import { insertTask, updateStatus, updateTask, getOpenTasks, reopenSnoozedDueTasks, taskExistsByTitle, getTasksByStatus, getExactDupes } from './db/helpers';
+import { insertTask, updateStatus, updateTask, getOpenTasks, reopenSnoozedDueTasks, taskExistsByTitle, getTasksByStatus, getExactDupes, getDoneTasks } from './db/helpers';
 
 function showChannels(): void {
   const file = path.join(process.cwd(), 'slack.json');
@@ -62,7 +62,17 @@ switch (command) {
   }
 
   case 'show': {
-    showTasks();
+    if (args[0] === 'done') {
+      const doneTasks = getDoneTasks();
+      console.log(`\n=== Done Tasks (${doneTasks.length}) ===\n`);
+      for (const t of doneTasks) {
+        console.log(`  ✓ ${t.id.slice(0, 8)} · ${t.title}`);
+        if (t.context) console.log(`           ${t.context}`);
+      }
+      console.log();
+    } else {
+      showTasks();
+    }
     break;
   }
 
@@ -143,6 +153,6 @@ switch (command) {
   }
 
   default: {
-    console.log('Commands: init | show | insert <json> | done <id> | snooze <id> <date> | reopen <id> | update <id> <json> | exists <title> | dupes | channels');
+    console.log('Commands: init | show [done] | insert <json> | done <id> | snooze <id> <date> | reopen <id> | update <id> <json> | exists <title> | dupes | channels');
   }
 }
