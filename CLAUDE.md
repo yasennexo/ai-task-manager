@@ -52,24 +52,26 @@ Task IDs are displayed as the first 8 characters in `npm run tasks` output. Use 
 
 3. **Discover private channels**
    - Ask: "How would you like to add your private channels?" and present two options:
-     > **Option A — I'll find them for you:** Tell me keywords or partial names (e.g. `product, tech-leads, executive`) and I'll search Slack and show you matches to confirm.
-     > **Option B — Paste a list:** Give me the channel names comma-separated (e.g. `product-squad, nexo-tech-leads, executive-core`) and I'll look up the IDs.
+
+     **A) I'll find them for you** — Give me keywords or partial names (e.g. `product, tech-leads, executive`) and I'll search Slack and show you matches to confirm.
+
+     **B) Paste a list** — Give me channel names comma-separated (e.g. `product-squad, nexo-tech-leads, executive-core`) and I'll look up the IDs.
+
    - **If Option A**: use `slack_search_channels` with each keyword, present the matches, and ask the user to confirm which ones to include.
    - **If Option B**: use `slack_search_channels` for each name to resolve the ID.
-   - If a channel can't be found via search (common for private channels), prompt the user with:
-     > "I couldn't find **#channel-name** automatically. To get its ID:
-     > 1. Open Slack and go to the channel
-     > 2. Click the channel name at the top to open channel details
-     > 3. Scroll to the bottom — the Channel ID is shown there (looks like `C01XXXXXXXX`)
-     > 4. Alternatively: right-click the channel in the sidebar → **Copy link** → the ID is the last segment of the URL (e.g. `https://app.slack.com/client/TXXXXXXX/C01XXXXXXXX`)"
+   - If a channel can't be found via search (common for private channels), tell the user: "I couldn't find **#channel-name** automatically. To get its ID: (1) Open Slack and go to the channel, (2) click the channel name at the top to open channel details, (3) scroll to the bottom — the Channel ID is shown there (e.g. `C01XXXXXXXX`). Alternatively: right-click the channel in the sidebar → Copy link → the ID is the last segment of the URL."
    - If still can't be found, skip and tell the user.
 
 4. **Discover public channels** (optional)
    - Ask: "Any public channels to include? These are opt-in." and present two options:
-     > **Option A — I'll find them for you:** Give me keywords and I'll search and show you matches to pick from.
-     > **Option B — Paste a list:** Give me names and I'll resolve the IDs.
-     > **Skip:** Leave blank to skip public channels entirely.
-   - Use `slack_search_channels` to resolve. If not found, use the same copy-link tip above.
+
+     **A) I'll find them for you** — Give me keywords and I'll search and show you matches to pick from.
+
+     **B) Paste a list** — Give me names and I'll resolve the IDs.
+
+     Or skip entirely by leaving blank.
+
+   - Use `slack_search_channels` to resolve. If not found, use the same inline tip above.
 
 5. **Discover DMs**
    - Ask: "Who do you frequently DM? List their full names (comma-separated). Include yourself for self-notes."
