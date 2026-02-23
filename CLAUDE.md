@@ -84,28 +84,31 @@ Supported scope parameters — use these to control what gets scanned:
 | `extract my tasks from private channels` / `sync channels` | private channels only |
 | `extract my tasks including public channels` | private channels + DMs + public channels |
 
-1. Use the Slack MCP tools to read recent messages:
+1. Determine the lookback window:
+   - Read `LOOKBACK_DAYS` from the environment (`.env` file). Default: `7` if not set.
+   - Compute `oldest` Unix timestamp: `Math.floor(Date.now() / 1000) - (LOOKBACK_DAYS * 86400)`
+   - Pass this as the `oldest` parameter to all `slack_read_channel` calls
+2. Use the Slack MCP tools to read recent messages:
    - Load `slack.json` in this directory — it contains `slack_user_id` and all known channel IDs and DMs
    - Your Slack user ID is the value of `slack_user_id` in `slack.json`
    - **Private channels** are listed under `channels.private` — read each with `slack_read_channel`
    - **DMs** are listed under `dms` — read each with `slack_read_channel` (skip entries with placeholder IDs like `D0XXXXXXXXX`)
    - **Public channels** are opt-in only — use `slack_search_public` with query `<@{slack_user_id}>` to find mentions, then read relevant channels
-   - Look back 7 days (not just 24h) to avoid missing things
    - `slack_search_public_and_private` may fail with a permissions error — if it does, fall back to reading channels directly
-2. If Google / Gmail MCP is connected, search for unread or starred emails from the last 7 days
-3. For each message or email, apply **contextual task extraction** — go beyond explicit "do X" statements. Look for:
+3. If Google / Gmail MCP is connected, search for unread or starred emails within the same lookback window
+4. For each message or email, apply **contextual task extraction** — go beyond explicit "do X" statements. Look for:
    - **Implicit commitments**: things you said you would do ("I'll send that over", "let me check", "I'll add them")
    - **Promised follow-ups**: things you agreed to get back to someone about
    - **Open decisions**: questions you raised or were asked that have no resolution yet
    - **Waiting-on items**: things blocked on an approval, response, or event that you need to track
    - **Missed items**: things shared with you (docs, prototypes, reviews) that you haven't acknowledged or acted on
    - Still skip pure FYIs, general discussion, and status updates with no action component for you
-4. For each extracted task:
+5. For each extracted task:
    - Assign **project**: `nexo` (work on Nexo), `personal` (everything else)
    - Assign **priority**: `high` (urgent/blocking), `medium` (normal), `low` (nice-to-have)
    - Check `npm run tasks` first — skip if a task with the same title already exists (case-insensitive)
    - Run `npm run cli insert '<json>'` to save it
-5. Report how many new tasks were added and from which sources
+6. Report how many new tasks were added and from which sources
 
 ### Show tasks ("show my tasks", "what do I need to do?", "task list")
 
