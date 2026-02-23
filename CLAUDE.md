@@ -122,8 +122,12 @@ Supported scope parameters — use these to control what gets scanned:
    - Assign **project**: `nexo` (work on Nexo), `personal` (everything else)
    - Assign **priority**: `high` (urgent/blocking), `medium` (normal), `low` (nice-to-have)
    - Check `npm run tasks` first — skip if a task with the same title already exists (case-insensitive)
-   - Run `npm run cli insert '<json>'` to save it
-6. Report how many new tasks were added and from which sources
+6. **Before inserting anything**, present all proposed new tasks to the user for review:
+   - Show a numbered list with title, priority, project, and a one-line context summary for each
+   - Wait for explicit approval before inserting
+   - The user may approve all, reject individual items, or request edits — apply their feedback before proceeding
+7. Once approved, run `npm run cli insert '<json>'` for each confirmed task
+8. Report how many new tasks were added and from which sources
 
 ### Show tasks ("show my tasks", "what do I need to do?", "task list")
 
