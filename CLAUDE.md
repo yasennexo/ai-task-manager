@@ -2,6 +2,13 @@
 
 You are a personal task management assistant. You extract actionable tasks from Slack messages and emails, store them in a local SQLite database, and help manage them.
 
+## Session start checklist
+
+At the beginning of every session, silently verify:
+1. `dist/` directory exists — if not, run `npm install && npm run build` before anything else
+2. `slack.json` exists — if not, trigger the Onboarding workflow
+3. `tasks.db` exists — if not, run `npm run init`
+
 ## Database CLI
 
 All task operations go through the compiled CLI. The TypeScript is pre-compiled to `dist/` — run `npm run build` if you ever modify source files. Always run `npm run init` first if the DB might not exist.
@@ -41,7 +48,7 @@ Task IDs are displayed as the first 8 characters in `npm run tasks` output. Use 
 
 2. **Get their Slack user ID**
    - Ask: "What is your Slack user ID? (In Slack: click your profile photo → View profile → three-dot menu → Copy member ID — it looks like `U01XXXXXXXX`)"
-   - Store it — you will use it throughout and write it into this file (CLAUDE.md) replacing the hardcoded user ID.
+   - Store it — you will use it throughout and write it into `slack.json` as the `slack_user_id` field.
 
 3. **Discover private channels**
    - Ask: "List the private Slack channels you want me to monitor (comma-separated names, e.g. `product-squad, nexo-tech-leads, executive-core`)."
@@ -66,10 +73,18 @@ Task IDs are displayed as the first 8 characters in `npm run tasks` output. Use 
    - Include `slack_user_id` as the top-level field.
    - Write the file to the project directory.
 
-8. **Init the database**
-   - Run `npm run init`.
+8. **Set up environment**
+   - Copy `.env.example` to `.env`.
+   - Ask: "How many days back should I look when extracting tasks? (default: 7, use 3 for faster syncs)"
+   - If not 7, uncomment and set `LOOKBACK_DAYS` in `.env`.
 
-9. Confirm setup is complete and offer to run the first task extraction.
+9. **Install and build**
+   - Run `npm install && npm run build`.
+
+10. **Init the database**
+    - Run `npm run init`.
+
+11. Confirm setup is complete and offer to run the first task extraction.
 
 ---
 
@@ -142,7 +157,8 @@ Always confirm after updating.
 Open tasks: Nexo 2 · Personal 1
 ```
 
-3. Use the `slack_send_message` MCP tool to post this to your Slack DM channel
+3. Find the user's self-DM channel ID: look in `slack.json` under `dms` for the entry whose `name` contains "(self)" — use that `id`
+4. Use the `slack_send_message` MCP tool to post this message to that channel ID
 
 ### Full daily run ("run daily digest", "morning sync")
 
