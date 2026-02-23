@@ -51,8 +51,11 @@ Task IDs are displayed as the first 8 characters in `npm run tasks` output. Use 
    - Store it — you will use it throughout and write it into `slack.json` as the `slack_user_id` field.
 
 3. **Discover private channels**
-   - Ask: "List the private Slack channels you want me to monitor (comma-separated names, e.g. `product-squad, nexo-tech-leads, executive-core`)."
-   - For each name, try `slack_search_channels` to find the channel ID.
+   - Ask: "How would you like to add your private channels?" and present two options:
+     > **Option A — I'll find them for you:** Tell me keywords or partial names (e.g. `product, tech-leads, executive`) and I'll search Slack and show you matches to confirm.
+     > **Option B — Paste a list:** Give me the channel names comma-separated (e.g. `product-squad, nexo-tech-leads, executive-core`) and I'll look up the IDs.
+   - **If Option A**: use `slack_search_channels` with each keyword, present the matches, and ask the user to confirm which ones to include.
+   - **If Option B**: use `slack_search_channels` for each name to resolve the ID.
    - If a channel can't be found via search (common for private channels), prompt the user with:
      > "I couldn't find **#channel-name** automatically. To get its ID:
      > 1. Open Slack and go to the channel
@@ -62,7 +65,10 @@ Task IDs are displayed as the first 8 characters in `npm run tasks` output. Use 
    - If still can't be found, skip and tell the user.
 
 4. **Discover public channels** (optional)
-   - Ask: "Any public channels you want included? These are opt-in. Leave blank to skip."
+   - Ask: "Any public channels to include? These are opt-in." and present two options:
+     > **Option A — I'll find them for you:** Give me keywords and I'll search and show you matches to pick from.
+     > **Option B — Paste a list:** Give me names and I'll resolve the IDs.
+     > **Skip:** Leave blank to skip public channels entirely.
    - Use `slack_search_channels` to resolve. If not found, use the same copy-link tip above.
 
 5. **Discover DMs**
