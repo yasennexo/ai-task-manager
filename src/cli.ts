@@ -4,7 +4,7 @@ dotenv.config();
 import fs from 'fs';
 import path from 'path';
 import { runMigrations } from './db/schema';
-import { insertTask, updateStatus, updateTask, getOpenTasks, reopenSnoozedDueTasks } from './db/helpers';
+import { insertTask, updateStatus, updateTask, getOpenTasks, reopenSnoozedDueTasks, taskExistsByTitle } from './db/helpers';
 
 function showChannels(): void {
   const file = path.join(process.cwd(), 'slack.json');
@@ -105,6 +105,13 @@ switch (command) {
     if (updateCount === 0) { console.error(`✗ No task found with ID starting with: ${args[0]}`); process.exit(1); }
     console.log(`✓ Task ${args[0]} updated`);
     break;
+  }
+
+  case 'exists': {
+    if (!args[0]) { console.error('Usage: cli exists <title>'); process.exit(1); }
+    const exists = taskExistsByTitle(args[0]);
+    console.log(exists ? 'true' : 'false');
+    process.exit(exists ? 0 : 1);
   }
 
   case 'channels': {

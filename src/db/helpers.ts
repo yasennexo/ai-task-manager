@@ -63,6 +63,13 @@ export function reopenSnoozedDueTasks(): number {
   return result.changes;
 }
 
+export function taskExistsByTitle(title: string): boolean {
+  const row = db.prepare(`
+    SELECT 1 FROM tasks WHERE LOWER(title) = LOWER(?) LIMIT 1
+  `).get(title);
+  return !!row;
+}
+
 export function getOpenTasks(project?: 'nexo' | 'mindhub' | 'personal'): Task[] {
   if (project) {
     return db.prepare(`

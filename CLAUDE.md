@@ -142,7 +142,7 @@ Supported scope parameters — use these to control what gets scanned:
 5. For each extracted task:
    - Assign **project**: `nexo` (work on Nexo), `personal` (everything else)
    - Assign **priority**: `high` (urgent/blocking), `medium` (normal), `low` (nice-to-have)
-   - Check `npm run tasks` first — skip if a task with the same title already exists (case-insensitive)
+   - Check `npm run cli exists '<title>'` — skip if it prints `true` (searches all tasks regardless of status, including done and snoozed)
 6. **Before inserting anything**, present all proposed new tasks to the user for review:
    - Show a numbered list with title, priority, project, and a one-line context summary for each
    - Wait for explicit approval before inserting
