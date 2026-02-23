@@ -52,17 +52,30 @@ Task IDs are displayed as the first 8 characters in `npm run tasks` output. Use 
 
 3. **Discover private channels**
    - Ask: "List the private Slack channels you want me to monitor (comma-separated names, e.g. `product-squad, nexo-tech-leads, executive-core`)."
-   - For each name, use `slack_search_channels` to find the channel ID.
-   - If a channel can't be found, tell the user and skip it.
+   - For each name, try `slack_search_channels` to find the channel ID.
+   - If a channel can't be found via search (common for private channels), prompt the user with:
+     > "I couldn't find **#channel-name** automatically. To get its ID:
+     > 1. Open Slack and go to the channel
+     > 2. Click the channel name at the top to open channel details
+     > 3. Scroll to the bottom — the Channel ID is shown there (looks like `C01XXXXXXXX`)
+     > 4. Alternatively: right-click the channel in the sidebar → **Copy link** → the ID is the last segment of the URL (e.g. `https://app.slack.com/client/TXXXXXXX/C01XXXXXXXX`)"
+   - If still can't be found, skip and tell the user.
 
 4. **Discover public channels** (optional)
    - Ask: "Any public channels you want included? These are opt-in. Leave blank to skip."
-   - Resolve the same way with `slack_search_channels`.
+   - Use `slack_search_channels` to resolve. If not found, use the same copy-link tip above.
 
 5. **Discover DMs**
    - Ask: "Who do you frequently DM? List their full names (comma-separated). Include yourself for self-notes."
    - For each name, use `slack_search_users` to find the user, then ask the user to confirm the match.
-   - Note: DM channel IDs (`D...`) differ from user IDs — ask the user to open the DM in Slack, copy the URL, and extract the channel ID from it (e.g. `https://app.slack.com/client/TXXXXXXX/DXXXXXXXX` → `DXXXXXXXX`). Group DMs work the same way.
+   - DM channel IDs (`D...`) can't be looked up by name — prompt the user with:
+     > "To get the DM channel ID for **Person Name**:
+     > 1. Open the DM with them in Slack
+     > 2. Click their name at the top to open their profile
+     > 3. The URL in your browser will look like `https://app.slack.com/client/TXXXXXXX/DXXXXXXXX` — the last segment is the channel ID
+     > 4. For **group DMs**: open the group DM, click the member names at the top, then copy the URL the same way"
+   - For the user's **self-DM** (saved messages / self-notes), prompt:
+     > "To get your self-DM ID: click **Slack → You** in the sidebar (the entry with your own name), then copy the URL from your browser — it ends in your DM channel ID (starts with `D`)."
 
 6. **Define projects**
    - Ask: "What are your main work projects? (e.g. `nexo`, `trading`). Everything else will go under `personal`."
