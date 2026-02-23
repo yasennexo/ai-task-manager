@@ -70,6 +70,25 @@ export function taskExistsByTitle(title: string): boolean {
   return !!row;
 }
 
+export type TaskSummary = { id: string; title: string; status: string };
+
+export function getTasksByStatus(status: 'open' | 'done' | 'snoozed'): TaskSummary[] {
+  return db.prepare(`
+    SELECT id, title, status FROM tasks WHERE status = ? ORDER BY LOWER(title)
+  `).all(status) as TaskSummary[];
+}
+
+export type ExactDupe = { open_id: string; done_id: string; title: string };
+
+export function getExactDupes(): ExactDupe[] {
+  return db.prepare(`
+    SELECT o.id as open_id, d.id as done_id, o.title
+    FROM tasks o
+    JOIN tasks d ON LOWER(o.title) = LOWER(d.title) AND o.id != d.id
+    WHERE o.status = 'open' AND d.status = 'done'
+  `).all() as ExactDupe[];
+}
+
 export function getOpenTasks(project?: 'nexo' | 'mindhub' | 'personal'): Task[] {
   if (project) {
     return db.prepare(`

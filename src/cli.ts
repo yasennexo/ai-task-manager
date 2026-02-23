@@ -4,7 +4,7 @@ dotenv.config();
 import fs from 'fs';
 import path from 'path';
 import { runMigrations } from './db/schema';
-import { insertTask, updateStatus, updateTask, getOpenTasks, reopenSnoozedDueTasks, taskExistsByTitle } from './db/helpers';
+import { insertTask, updateStatus, updateTask, getOpenTasks, reopenSnoozedDueTasks, taskExistsByTitle, getTasksByStatus, getExactDupes } from './db/helpers';
 
 function showChannels(): void {
   const file = path.join(process.cwd(), 'slack.json');
@@ -107,6 +107,29 @@ switch (command) {
     break;
   }
 
+  case 'dupes': {
+    const exact = getExactDupes();
+    if (exact.length > 0) {
+      console.log('\n⚠️  Exact duplicates (open task already exists as done):\n');
+      for (const d of exact) {
+        console.log(`  OPEN  ${d.open_id.slice(0, 8)} · ${d.title}`);
+        console.log(`  DONE  ${d.done_id.slice(0, 8)} · ${d.title}\n`);
+      }
+    } else {
+      console.log('\n✓ No exact duplicates found\n');
+    }
+
+    const open = getTasksByStatus('open');
+    const done = getTasksByStatus('done');
+
+    console.log(`=== OPEN (${open.length}) ===\n`);
+    for (const t of open) console.log(`  ${t.id.slice(0, 8)} · ${t.title}`);
+
+    console.log(`\n=== DONE (${done.length}) ===\n`);
+    for (const t of done) console.log(`  ${t.id.slice(0, 8)} · ${t.title}`);
+    break;
+  }
+
   case 'exists': {
     if (!args[0]) { console.error('Usage: cli exists <title>'); process.exit(1); }
     const exists = taskExistsByTitle(args[0]);
@@ -120,6 +143,6 @@ switch (command) {
   }
 
   default: {
-    console.log('Commands: init | show | insert <json> | done <id> | snooze <id> <date> | reopen <id> | channels');
+    console.log('Commands: init | show | insert <json> | done <id> | snooze <id> <date> | reopen <id> | update <id> <json> | exists <title> | dupes | channels');
   }
 }

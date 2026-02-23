@@ -22,6 +22,7 @@ All task operations go through the compiled CLI. The TypeScript is pre-compiled 
 | `npm run cli snooze <id> <YYYY-MM-DD>` | Snooze a task |
 | `npm run cli reopen <id>` | Reopen a snoozed/done task |
 | `npm run cli update <id> '<json>'` | Update task fields (title, context, project, priority) |
+| `npm run cli dupes` | Show exact duplicates (open tasks that also exist as done) + alphabetical open/done lists for visual review |
 
 Task IDs are displayed as the first 8 characters in `npm run tasks` output. Use the full ID when calling CLI commands.
 
