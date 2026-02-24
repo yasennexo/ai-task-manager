@@ -42,7 +42,7 @@ for (const project of projects) {
   if (tasks.length === 0) continue;
   const lines = [`${PROJECT_EMOJI[project]} *${project.toUpperCase()}*`];
   for (const t of tasks) {
-    lines.push(`  ${PRIORITY_LABEL[t.priority] ?? '[???]'} ${t.title}`);
+    lines.push(`  ${PRIORITY_LABEL[t.priority] ?? '[???]'} \`${t.id.slice(0, 8)}\` ${t.title}`);
   }
   sections.push(lines.join('\n'));
 }
