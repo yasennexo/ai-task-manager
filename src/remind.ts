@@ -4,6 +4,7 @@ dotenv.config();
 import fs from 'fs';
 import path from 'path';
 import https from 'https';
+import { getOpenTasks, reopenSnoozedDueTasks } from './db/helpers';
 
 const token = process.env.SLACK_BOT_TOKEN;
 if (!token) {
@@ -25,12 +26,41 @@ if (!selfDm) {
   process.exit(1);
 }
 
-const message = {
-  channel: selfDm.id,
-  text: `🌅 *Morning task sync reminder*\n\nOpen Claude Code in your task manager and say *"sync my tasks"* to extract new tasks from Slack.\n\n_AI Task Manager · ${new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}_`,
-};
+// Reopen any snoozed tasks that are due, then fetch all open tasks
+reopenSnoozedDueTasks();
+const allTasks = getOpenTasks();
 
-const body = JSON.stringify(message);
+const PRIORITY_LABEL: Record<string, string> = { high: '[HIGH]', medium: '[MED] ', low: '[LOW] ' };
+const PROJECT_EMOJI: Record<string, string> = { nexo: '🔵', personal: '🟢', mindhub: '🟣' };
+
+// Group by project
+const projects = ['nexo', 'mindhub', 'personal'] as const;
+const sections: string[] = [];
+
+for (const project of projects) {
+  const tasks = allTasks.filter(t => t.project === project);
+  if (tasks.length === 0) continue;
+  const lines = [`${PROJECT_EMOJI[project]} *${project.toUpperCase()}*`];
+  for (const t of tasks) {
+    lines.push(`  ${PRIORITY_LABEL[t.priority] ?? '[???]'} ${t.title}`);
+  }
+  sections.push(lines.join('\n'));
+}
+
+const date = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+const taskBlock = sections.length > 0 ? sections.join('\n\n') : "_No open tasks — you're all caught up!";
+
+const text = [
+  `🌅 *Good morning! Here's your task list for ${date}*`,
+  '',
+  taskBlock,
+  '',
+  `*Open tasks: ${allTasks.length}*`,
+  '',
+  '_Open Claude Code and say *"sync my tasks"* to check for new ones from Slack._',
+].join('\n');
+
+const body = JSON.stringify({ channel: selfDm.id, text });
 
 const options = {
   hostname: 'slack.com',
@@ -49,7 +79,7 @@ const req = https.request(options, (res) => {
   res.on('end', () => {
     const json = JSON.parse(data);
     if (json.ok) {
-      console.log(`✓ Reminder sent to ${selfDm.name} (${selfDm.id})`);
+      console.log(`✓ Reminder sent to ${selfDm.name} (${selfDm.id}) — ${allTasks.length} tasks included`);
     } else {
       console.error(`✗ Slack API error: ${json.error}`);
       process.exit(1);
